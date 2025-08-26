@@ -263,11 +263,6 @@ Allows the teacher who owns the course to update a specific lecture.
     def get_object(self):
         lecture = super().get_object()
 
-        if lecture.course.owner != self.request.user:
-            raise PermissionDenied(
-                'You do not have permission to update this lecture'
-            )
-
         return lecture
 
 
@@ -304,13 +299,5 @@ Allows a teacher to delete a lecture from a course they are associated with.
     )
     def get_object(self):
         lecture = super().get_object()
-
-        if not Enrollment.objects.filter(
-            user=self.request.user,
-            course=lecture.course
-        ).exists() and lecture.course.owner != self.request.user:
-            raise PermissionDenied(
-                'You do not have permission to delete this lecture'
-            )
 
         return lecture

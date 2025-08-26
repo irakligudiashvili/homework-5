@@ -2,6 +2,7 @@ from rest_framework import serializers
 from api.models import Course
 from .lecture import LectureSerializer
 from .user import UserSerializer
+from ..services.course import CourseService
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -12,11 +13,10 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'owner']
         read_only_fields = ['id', 'email', 'role']
 
-    def validate_owner(self, value):
-        if value.role != 'teacher':
-            raise serializers.ValidationError('Only teachers can own courses')
+    def create(self, validated_data):
+        owner = self.context['request'].user
 
-        return value
+        return CourseService.create_course(owner, validated_data)
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):

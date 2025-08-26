@@ -45,7 +45,7 @@ Allows an authenticated user with a 'teacher' role to create a new course. The t
         tags=["courses"]
     )
     def perform_create(self, serializer):
-        course = serializer.save(owner=self.request.user)
+        course = serializer.save()
         Enrollment.objects.get_or_create(user=self.request.user, course=course)
 
 

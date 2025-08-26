@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from api.models import Comment
+from api.services import CommentService
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -11,6 +12,6 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'user']
 
     def create(self, validated_data):
-        validated_data['user'] = self.context['request'].user
+        user = self.context['request'].user
 
-        return super().create(validated_data)
+        return CommentService.create_comment(user, validated_data)
